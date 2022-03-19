@@ -1,8 +1,8 @@
-"VimPlug for Plugins
+"VimPlug for plugins
 call plug#begin('~/.config/nvim/plugged')
 
-  Plug 'morhetz/gruvbox' "theming
-  Plug 'preservim/nerdtree' "fileexplorer
+  Plug 'morhetz/gruvbox' "Theming
+  Plug 'preservim/nerdtree' "File-explorer
 
 call plug#end()
 
@@ -20,7 +20,7 @@ nnoremap <C-n> :NERDTreeToggle<CR>
 
 set modifiable "allows us to modifiy files in nerdTree
 
-"Standart configurations
+"standart configurations
 set nu rnu
 
 set autoindent
@@ -39,20 +39,30 @@ set clipboard=unnamedplus
 
 set showmode
 
-"Tabnavigation
+"Tab-navigation
 nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
 
+" Custom functions
 function! MD_Preview()
   :call Render_MD_Preview()
   :autocmd BufWrite * :call Render_MD_Preview()
   :! firefox "/tmp/mdPreview.html"
 endfunction
 
-
 function! Render_MD_Preview()
   :! markdown '%:p' > /tmp/mdPreview.html
   :! echo "<meta http-equiv='refresh' content='3' />" >> /tmp/mdPreview.html
+endfunction
+
+function! German()
+  :set spell
+  :set spelllang=de_ch
+endfunction
+
+function! English()
+  :set spell
+  :set spelllang=en_gb
 endfunction
