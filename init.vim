@@ -1,67 +1,78 @@
 "VimPlug for plugins
 call plug#begin('~/.config/nvim/plugged')
-
   Plug 'morhetz/gruvbox' "Theming
-  Plug 'preservim/nerdtree' "File-explorer
-
+  Plug 'preservim/nerdtree' "File-explorer 
+  Plug 'neoclide/coc.nvim',{'branch':'release'} "autocomplete 
+  Plug 'itchyny/lightline.vim' "status-line/tabline
+  Plug 'tpope/vim-surround' 
+  Plug 'mg979/vim-visual-multi' "multiple cursors
 call plug#end()
-
-"Thememing
+"-----------------------------------------------------------------------------------------------------
+"coc
+nmap <silent> gd <Plug>(coc-definition)
+"-----------------------------------------------------------------------------------------------------
+"Thememing" 
+colorscheme gruvbox
+let g:lightline = {'colorscheme': 'wombat',} "tabline
+set background=dark
+set laststatus=2
+set showmode 
+"-----------------------------------------------------------------------------------------------------
+"NerdTree
+nnoremap <leader>n :NERDTreeFocus<CR>
+nnoremap <C-t> :NERDTreeToggle<CR>
+"-----------------------------------------------------------------------------------------------------
+"Things that should be default
 if (has("termguicolors")) 
   set termguicolors
 endif
-
-set background=dark
-colorscheme gruvbox
-
-"NerdTree mapping
-nnoremap <leader>n :NERDTreeFocus<CR>
-nnoremap <C-n> :NERDTreeToggle<CR>
-
-set modifiable "allows us to modifiy files in nerdTree
-
-"standart configurations
+set autoread 
+set clipboard=unnamedplus 
+"-----------------------------------------------------------------------------------------------------
+"Syntax
+syntax on
+set showmatch
+"-----------------------------------------------------------------------------------------------------
+"Lines
 set nu rnu
-
-set autoindent
+set cursorline
+map j gj
+map k gk
+"-----------------------------------------------------------------------------------------------------
+"<tab>
 set tabstop=2
+set autoindent
 set shiftwidth=2
 set expandtab
-
-set showmatch
-syntax on
-
-set ignorecase
-set incsearch
-set hlsearch
-
-set clipboard=unnamedplus
-
-set showmode
-
-"Tab-navigation
+"-----------------------------------------------------------------------------------------------------
+"views
 nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
-
-" Custom functions
+"-----------------------------------------------------------------------------------------------------
+"search
+set ignorecase
+set smartcase
+set incsearch
+set hlsearch
+"-----------------------------------------------------------------------------------------------------
+" markdown Preview
 function! MD_Preview()
   :call Render_MD_Preview()
   :autocmd BufWrite * :call Render_MD_Preview()
   :! firefox "/tmp/mdPreview.html"
 endfunction
-
 function! Render_MD_Preview()
   :! markdown '%:p' > /tmp/mdPreview.html
   :! echo "<meta http-equiv='refresh' content='3' />" >> /tmp/mdPreview.html
 endfunction
-
+"German Spellcheck
 function! German()
   :set spell
   :set spelllang=de_ch
 endfunction
-
+"English Spellcheck
 function! English()
   :set spell
   :set spelllang=en_gb
