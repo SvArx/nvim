@@ -10,6 +10,7 @@ call plug#end()
 "-----------------------------------------------------------------------------------------------------
 "coc
 nmap <silent> gd <Plug>(coc-definition)
+inoremap <silent><expr> <tab> pumvisible() ? coc#_select_confirm() :"\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 "-----------------------------------------------------------------------------------------------------
 "Thememing" 
 colorscheme gruvbox
