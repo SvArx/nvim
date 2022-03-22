@@ -14,14 +14,16 @@ call plug#begin('~/.config/nvim/plugged')
   Plug 'tpope/vim-surround' 
   Plug 'mg979/vim-visual-multi' "multiple cursors
   Plug 'airblade/vim-gitgutter' "show git changes toggle with :GitGutterToggle
+  Plug 'dracula/vim', { 'as': 'dracula' } "new colourscheme which I am currently trying out
 call plug#end()
 "--------------------------------------------------------------------------------------------------
 "coc
 nmap <silent> gd <Plug>(coc-definition)
-inoremap <silent><expr> <tab> pumvisible() ? coc#_select_confirm() :"\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+inoremap <silent><expr> <C-Space> pumvisible() ? coc#_select_confirm() :"\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 "--------------------------------------------------------------------------------------------------
 "Thememing" 
-colorscheme gruvbox
+"colorscheme gruvbox
+colorscheme dracula
 let g:lightline = {'colorscheme': 'wombat',} "tabline
 set background=dark
 set laststatus=2
