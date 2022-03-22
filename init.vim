@@ -6,6 +6,7 @@ call plug#begin('~/.config/nvim/plugged')
   Plug 'itchyny/lightline.vim' "status-line/tabline
   Plug 'tpope/vim-surround' 
   Plug 'mg979/vim-visual-multi' "multiple cursors
+  Plug 'airblade/vim-gitgutter' "show git changes toggle with :GitGutterToggle
 call plug#end()
 "-----------------------------------------------------------------------------------------------------
 "coc
@@ -22,6 +23,7 @@ set showmode
 "NerdTree
 nnoremap <leader>n :NERDTreeFocus<CR>
 nnoremap <C-t> :NERDTreeToggle<CR>
+set updatetime=300
 "-----------------------------------------------------------------------------------------------------
 "Things that should be default
 if (has("termguicolors")) 
