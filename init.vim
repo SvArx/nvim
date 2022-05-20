@@ -8,13 +8,16 @@
 "VimPlug for plugins
 call plug#begin('~/.config/nvim/plugged')
   Plug 'morhetz/gruvbox' "Theming
+  Plug 'dracula/vim', { 'as': 'dracula' } "Theming
+  Plug 'EdenEast/nightfox.nvim' "Theming
   Plug 'preservim/nerdtree' "File-explorer 
   Plug 'neoclide/coc.nvim',{'branch':'release'} "autocomplete 
   Plug 'itchyny/lightline.vim' "status-line/tabline
   Plug 'tpope/vim-surround' 
   Plug 'mg979/vim-visual-multi' "multiple cursors
   Plug 'airblade/vim-gitgutter' "show git changes toggle with :GitGutterToggle
-  Plug 'dracula/vim', { 'as': 'dracula' } "new colourscheme which I am currently trying out
+  Plug 'github/copilot.vim' "let's look what this is all about
+  Plug 'lukas-reineke/indent-blankline.nvim' 
 call plug#end()
 "--------------------------------------------------------------------------------------------------
 "coc
@@ -22,8 +25,7 @@ nmap <silent> gd <Plug>(coc-definition)
 inoremap <silent><expr> <C-Space> pumvisible() ? coc#_select_confirm() :"\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 "--------------------------------------------------------------------------------------------------
 "Thememing" 
-"colorscheme gruvbox
-colorscheme dracula
+colorscheme duskfox
 let g:lightline = {'colorscheme': 'wombat',} "tabline
 set background=dark
 set laststatus=2
@@ -69,16 +71,6 @@ set smartcase
 set incsearch
 set hlsearch
 "--------------------------------------------------------------------------------------------------
-" markdown Preview
-function! MD_Preview()
-  :call Render_MD_Preview()
-  :autocmd BufWrite * :call Render_MD_Preview()
-  :! firefox "/tmp/mdPreview.html"
-endfunction
-function! Render_MD_Preview()
-  :! markdown '%:p' > /tmp/mdPreview.html
-  :! echo "<meta http-equiv='refresh' content='3' />" >> /tmp/mdPreview.html
-endfunction
 "German Spellcheck
 function! German()
   :set spell
