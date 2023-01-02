@@ -8,7 +8,7 @@
 "VimPlug for plugins
 call plug#begin('~/.config/nvim/plugged')
   Plug 'morhetz/gruvbox' "Theming
-  Plug 'dracula/vim', { 'as': 'dracula' } "Theming
+  Plug 'dracula/vim' "Theming
   Plug 'EdenEast/nightfox.nvim' "Theming
   Plug 'preservim/nerdtree' "File-explorer 
   Plug 'neoclide/coc.nvim',{'branch':'release'} "autocomplete 
@@ -25,11 +25,10 @@ nmap <silent> gd <Plug>(coc-definition)
 inoremap <silent><expr> <C-Space> pumvisible() ? coc#_select_confirm() :"\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 "--------------------------------------------------------------------------------------------------
 "Thememing" 
-colorscheme duskfox
+colorscheme gruvbox
 let g:lightline = {'colorscheme': 'wombat',} "tabline
-set background=dark
 set laststatus=2
-set showmode 
+set showmode
 "--------------------------------------------------------------------------------------------------
 "NerdTree
 nnoremap <leader>n :NERDTreeFocus<CR>
@@ -42,6 +41,7 @@ if (has("termguicolors"))
 endif
 set autoread 
 set clipboard=unnamedplus 
+set list
 "--------------------------------------------------------------------------------------------------
 "Syntax
 syntax on
@@ -81,3 +81,6 @@ function! English()
   :set spell
   :set spelllang=en_gb
 endfunction
+
+
+set notermguicolors
