@@ -4,7 +4,7 @@ vim.opt.number = true
 vim.opt.smartcase = true
 vim.opt.hlsearch = false
 vim.opt.wrap = true
-vim.g.mapleader = ' '
+vim.g.mapleader = ','
 
 -- Define a function to ensure packer is installed
 local ensure_packer = function()
@@ -51,6 +51,9 @@ packer.startup(function(use)
         requires = { {'nvim-lua/plenary.nvim'} } -- Telescope's dependency
     }
 
+    -- Harpoon2
+    use 'ThePrimeagen/harpoon'
+
     -- LSP Config and LSP Installer
     use 'neovim/nvim-lspconfig' -- Core LSP configurations
     use 'williamboman/mason.nvim' -- LSP/DAP/formatters installer
@@ -75,7 +78,7 @@ packer.startup(function(use)
     end
 end)
 
-
+-----------------------------------------------------------------------------------------------------
 
 -- Telescope Setup and configuration --
 require('telescope').setup {
@@ -104,7 +107,25 @@ vim.keymap.set('n', '<leader>fg', builtin.live_grep, { desc = "Live Grep" })
 vim.keymap.set('n', '<leader>fb', builtin.buffers, { desc = "Find Buffers" })
 vim.keymap.set('n', '<leader>fh', builtin.help_tags, { desc = "Help Tags" })
 
+-----------------------------------------------------------------------------------------------------
 
+-- Require harpoon
+local harpoon_mark = require("harpoon.mark")
+local harpoon_ui = require("harpoon.ui")
+local harpoon_term = require("harpoon.term")
+
+-- Keymaps for harpoon
+vim.keymap.set('n', '<leader>a', harpoon_mark.add_file, { desc = "Add File to Harpoon" })
+vim.keymap.set('n', '<leader>m', harpoon_ui.toggle_quick_menu, { desc = "Toggle Harpoon Menu" })
+vim.keymap.set('n', '<leader>1', function() harpoon_ui.nav_file(1) end, { desc = "Harpoon File 1" })
+vim.keymap.set('n', '<leader>2', function() harpoon_ui.nav_file(2) end, { desc = "Harpoon File 2" })
+vim.keymap.set('n', '<leader>3', function() harpoon_ui.nav_file(3) end, { desc = "Harpoon File 3" })
+vim.keymap.set('n', '<leader>4', function() harpoon_ui.nav_file(4) end, { desc = "Harpoon File 4" })
+vim.keymap.set('n', '<leader>tt', function() harpoon_term.gotoTerminal(1) end, { desc = "Harpoon Terminal 1" })
+vim.keymap.set('n', '<leader>tn', function() harpoon_term.gotoTerminal(2) end, { desc = "Harpoon Terminal 2" })
+
+
+-----------------------------------------------------------------------------------------------------
 
 -- LSP Setup and configuration --
 require("mason").setup()
