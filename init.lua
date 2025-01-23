@@ -5,25 +5,28 @@ vim.opt.smartcase = true
 vim.opt.hlsearch = false
 vim.opt.wrap = true
 vim.g.mapleader = ','
+vim.opt.list = true
+vim.opt.listchars = { tab = '▸ ', trail = '·', extends = '>', precedes = '<', nbsp = '␣' }
+vim.opt.cursorline = true
 
 -- Define a function to ensure packer is installed
 local ensure_packer = function()
-    local fn = vim.fn
-    local install_path = fn.stdpath('data')..'/site/pack/packer/start/packer.nvim'
-    if fn.empty(fn.glob(install_path)) > 0 then
-        print("Packer not found. Installing...")
-        fn.system({
-            'git',
-            'clone',
-            '--depth', '1',
-            'https://github.com/wbthomason/packer.nvim',
-            install_path
-        })
-        vim.cmd [[packadd packer.nvim]]
-        print("Packer installed. Restart Neovim to load it.")
-        return true
-    end
-    return false
+	local fn = vim.fn
+	local install_path = fn.stdpath('data')..'/site/pack/packer/start/packer.nvim'
+	if fn.empty(fn.glob(install_path)) > 0 then
+		print("Packer not found. Installing...")
+		fn.system({
+			'git',
+			'clone',
+			'--depth', '1',
+			'https://github.com/wbthomason/packer.nvim',
+			install_path
+	})
+		vim.cmd [[packadd packer.nvim]]
+		print("Packer installed. Restart Neovim to load it.")
+		return true
+	end
+	return false
 end
 
 -- Automatically install packer if not already installed
@@ -38,67 +41,70 @@ end
 
 -- Configure packer
 packer.startup(function(use)
-    -- Packer manages itself
-    use 'wbthomason/packer.nvim'
+	-- Packer manages itself
+	use 'wbthomason/packer.nvim'
 
-    -- Dependencies
-    use "nvim-lua/plenary.nvim" -- don't forget to add this one if you don't have it yet!
+	-- Dependencies
+	use "nvim-lua/plenary.nvim" -- don't forget to add this one if you don't have it yet!
 
-    -- Telescope and its dependencies --
-    use {
-        'nvim-telescope/telescope.nvim',
-        tag = '0.1.3', -- Use the latest stable release (or remove this line for the latest commit)
-        requires = { {'nvim-lua/plenary.nvim'} } -- Telescope's dependency
-    }
+	-- Telescope and its dependencies --
+	use {
+		'nvim-telescope/telescope.nvim',
+		tag = '0.1.3', -- Use the latest stable release (or remove this line for the latest commit)
+		requires = { {'nvim-lua/plenary.nvim'} } -- Telescope's dependency
+	}
 
-    -- Harpoon2
-    use 'ThePrimeagen/harpoon'
+	-- Harpoon2
+	use 'ThePrimeagen/harpoon'
 
-    -- LSP Config and LSP Installer
-    use 'neovim/nvim-lspconfig' -- Core LSP configurations
-    use 'williamboman/mason.nvim' -- LSP/DAP/formatters installer
-    use 'williamboman/mason-lspconfig.nvim' -- Bridge between mason and lspconfig
+	-- Git gutter
+	use 'airblade/vim-gitgutter'
 
-    -- Completion Framework
-    use 'hrsh7th/nvim-cmp' -- Autocompletion plugin
-    use 'hrsh7th/cmp-nvim-lsp' -- LSP source for nvim-cmp
-    use 'hrsh7th/cmp-buffer' -- Buffer completions
-    use 'hrsh7th/cmp-path' -- Path completions
-    use 'hrsh7th/cmp-cmdline' -- Command line completions
-    use 'L3MON4D3/LuaSnip' -- Snippet engine
-    use 'saadparwaiz1/cmp_luasnip' -- Snippet completions
+	-- LSP Config and LSP Installer
+	use 'neovim/nvim-lspconfig' -- Core LSP configurations
+	use 'williamboman/mason.nvim' -- LSP/DAP/formatters installer
+	use 'williamboman/mason-lspconfig.nvim' -- Bridge between mason and lspconfig
 
-    -- Optional: Nice UI for diagnostics, code actions, etc.
-    use 'glepnir/lspsaga.nvim'
+	-- Completion Framework
+	use 'hrsh7th/nvim-cmp' -- Autocompletion plugin
+	use 'hrsh7th/cmp-nvim-lsp' -- LSP source for nvim-cmp
+	use 'hrsh7th/cmp-buffer' -- Buffer completions
+	use 'hrsh7th/cmp-path' -- Path completions
+	use 'hrsh7th/cmp-cmdline' -- Command line completions
+	use 'L3MON4D3/LuaSnip' -- Snippet engine
+	use 'saadparwaiz1/cmp_luasnip' -- Snippet completions
 
-    -- Automatically set up configuration after cloning packer.nvim
-    -- This must be placed at the end of all plugins
-    if packer_bootstrap then
-        require('packer').sync()
-    end
+	-- Optional: Nice UI for diagnostics, code actions, etc.
+	use 'glepnir/lspsaga.nvim'
+
+	-- Automatically set up configuration after cloning packer.nvim
+	-- This must be placed at the end of all plugins
+	if packer_bootstrap then
+		require('packer').sync()
+	end
 end)
 
 -----------------------------------------------------------------------------------------------------
 
 -- Telescope Setup and configuration --
 require('telescope').setup {
-    defaults = {
-        prompt_prefix = "> ",
-        selection_caret = "> ",
-        path_display = {"truncate"},
-        sorting_strategy = "ascending",
-    },
-    pickers = {
-        find_files = {
-            theme = "dropdown",
-        },
-        live_grep = {
-            theme = "ivy",
-        },
-    },
-    extensions = {
-        -- Add extension configurations here if needed
-    },
+	defaults = {
+		prompt_prefix = "> ",
+		selection_caret = "> ",
+		path_display = {"truncate"},
+		sorting_strategy = "ascending",
+	},
+	pickers = {
+		find_files = {
+			theme = "dropdown",
+		},
+		live_grep = {
+			theme = "ivy",
+		},
+	},
+	extensions = {
+	-- Add extension configurations here if needed
+	},
 }
 
 local builtin = require('telescope.builtin')
@@ -109,7 +115,7 @@ vim.keymap.set('n', '<leader>fh', builtin.help_tags, { desc = "Help Tags" })
 
 -----------------------------------------------------------------------------------------------------
 
--- Require harpoon
+-- Require harpoon --
 local harpoon_mark = require("harpoon.mark")
 local harpoon_ui = require("harpoon.ui")
 local harpoon_term = require("harpoon.term")
@@ -127,17 +133,29 @@ vim.keymap.set('n', '<leader>tn', function() harpoon_term.gotoTerminal(2) end, {
 
 -----------------------------------------------------------------------------------------------------
 
+-- Git Gutter Setup and configuration --
+vim.g.gitgutter_map_keys = 0
+vim.g.gitgutter_sign_priority = 5
+vim.g.gitgutter_sign_added = '▋'
+vim.g.gitgutter_sign_modified = '▋'
+vim.g.gitgutter_sign_removed = '▋'
+vim.g.gitgutter_sign_removed_first_line = '▔'
+vim.g.gitgutter_sign_modified_removed = '▋'
+vim.g.gitgutter_sign_modified_removed_first_line = '▔'
+
+-----------------------------------------------------------------------------------------------------
+
 -- LSP Setup and configuration --
 require("mason").setup()
 require("mason-lspconfig").setup({
-    ensure_installed = {
-        "lua_ls",        -- Lua
-        "pyright",       -- Python
-        "zls",           -- Zig
-        "clangd",        -- C, C++
-        "rust_analyzer", -- Rust
-        "gopls",         -- Go
-        "bashls",        -- Bash
+	ensure_installed = {
+		"lua_ls",        -- Lua
+		"pyright",       -- Python
+		"zls",           -- Zig
+		"clangd",        -- C, C++
+		"rust_analyzer", -- Rust
+		"gopls",         -- Go
+		"bashls",        -- Bash
 	},
 })
 
@@ -146,35 +164,35 @@ local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
 -- Example for a few servers; add more as needed
 lspconfig.lua_ls.setup {
-    capabilities = capabilities,
-    settings = {
-        Lua = {
-            diagnostics = { globals = { "vim" } }, -- Recognize 'vim' as a global
-        },
-    },
+	capabilities = capabilities,
+	settings = {
+		Lua = {
+			diagnostics = { globals = { "vim" } }, -- Recognize 'vim' as a global
+		},
+	},
 }
 
 local cmp = require'cmp'
 
 cmp.setup({
-    snippet = {
-        expand = function(args)
-            require('luasnip').lsp_expand(args.body) -- For `luasnip` users
-        end,
-    },
-    mapping = {
-        ['<C-b>'] = cmp.mapping.scroll_docs(-4),
-        ['<C-f>'] = cmp.mapping.scroll_docs(4),
-        ['<C-Space>'] = cmp.mapping.complete(),
-        ['<C-e>'] = cmp.mapping.abort(),
-        ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept selected item
-    },
-    sources = cmp.config.sources({
-        { name = 'nvim_lsp' },
-        { name = 'luasnip' },
-    }, {
-        { name = 'buffer' },
-    })
+	snippet = {
+		expand = function(args)
+			require('luasnip').lsp_expand(args.body) -- For `luasnip` users
+		end,
+	},
+	mapping = {
+		['<C-b>'] = cmp.mapping.scroll_docs(-4),
+		['<C-f>'] = cmp.mapping.scroll_docs(4),
+		['<C-Space>'] = cmp.mapping.complete(),
+		['<C-e>'] = cmp.mapping.abort(),
+		['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept selected item
+	},
+	sources = cmp.config.sources({
+		{ name = 'nvim_lsp' },
+		{ name = 'luasnip' },
+	}, {
+		{ name = 'buffer' },
+	})
 })
 
 -- Improved LSP UI
