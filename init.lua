@@ -60,6 +60,9 @@ packer.startup(function(use)
 	-- Git gutter
 	use 'airblade/vim-gitgutter'
 
+	-- File manager
+	use 'nvim-tree/nvim-tree.lua'
+
 	-- LSP Config and LSP Installer
 	use 'neovim/nvim-lspconfig' -- Core LSP configurations
 	use 'williamboman/mason.nvim' -- LSP/DAP/formatters installer
@@ -76,6 +79,9 @@ packer.startup(function(use)
 
 	-- Optional: Nice UI for diagnostics, code actions, etc.
 	use 'glepnir/lspsaga.nvim'
+
+	-- kanagawa theme
+	use 'gbprod/nord.nvim'
 
 	-- Automatically set up configuration after cloning packer.nvim
 	-- This must be placed at the end of all plugins
@@ -145,6 +151,13 @@ vim.g.gitgutter_sign_modified_removed_first_line = '▔'
 
 -----------------------------------------------------------------------------------------------------
 
+-- Nvim-tree Setup and configuration --
+require("nvim-tree").setup()
+
+vim.keymap.set('n', '<leader>e', ':NvimTreeToggle<CR>', { desc = "Toggle File Tree" })
+
+-----------------------------------------------------------------------------------------------------
+
 -- LSP Setup and configuration --
 require("mason").setup()
 require("mason-lspconfig").setup({
@@ -156,13 +169,14 @@ require("mason-lspconfig").setup({
 		"rust_analyzer", -- Rust
 		"gopls",         -- Go
 		"bashls",        -- Bash
+		"elixirls",      -- Elixir
 	},
 })
 
 local lspconfig = require("lspconfig")
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
--- Example for a few servers; add more as needed
+-- Lua server with custom settings
 lspconfig.lua_ls.setup {
 	capabilities = capabilities,
 	settings = {
@@ -171,6 +185,14 @@ lspconfig.lua_ls.setup {
 		},
 	},
 }
+
+-- Automatically set up all other installed servers
+local servers = { "pyright", "zls", "clangd", "rust_analyzer", "gopls", "bashls", "elixirls" }
+for _, server in ipairs(servers) do
+	lspconfig[server].setup {
+		capabilities = capabilities,
+	}
+end
 
 local cmp = require'cmp'
 
@@ -181,6 +203,8 @@ cmp.setup({
 		end,
 	},
 	mapping = {
+		['<C-n>'] = cmp.mapping.select_next_item(),
+		['<C-p>'] = cmp.mapping.select_prev_item(),
 		['<C-b>'] = cmp.mapping.scroll_docs(-4),
 		['<C-f>'] = cmp.mapping.scroll_docs(4),
 		['<C-Space>'] = cmp.mapping.complete(),
@@ -208,5 +232,7 @@ vim.keymap.set('n', 'gr', vim.lsp.buf.references, { desc = "References" })
 -- Diagnostic Keymaps
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = "Previous Diagnostic" })
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = "Next Diagnostic" })
-vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = "Show Diagnostic" })
+vim.keymap.set('n', '<leader>d', vim.diagnostic.open_float, { desc = "Show Diagnostic" })
 
+-- Colorshema
+vim.cmd.colorscheme("nord")
