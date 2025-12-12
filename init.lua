@@ -152,6 +152,8 @@ require("mason-lspconfig").setup({
 		"gopls",         -- Go
 		"bashls",        -- Bash
 		"elixirls",      -- Elixir
+		"ts_ls",         -- TypeScript/JavaScript
+		"svelte",        -- Svelte
 	},
 })
 
@@ -172,8 +174,22 @@ vim.lsp.config.lua_ls = {
 	},
 }
 
+-- Configure Svelte language server
+vim.lsp.config.svelte = {
+	settings = {
+		svelte = {
+			plugin = {
+				typescript = {
+					enable = true,
+					diagnostics = { enable = true },
+				},
+			},
+		},
+	},
+}
+
 -- Enable all LSP servers
-local servers = { "lua_ls", "pyright", "zls", "clangd", "rust_analyzer", "gopls", "bashls", "elixirls" }
+local servers = { "lua_ls", "pyright", "zls", "clangd", "rust_analyzer", "gopls", "bashls", "elixirls", "ts_ls", "svelte" }
 for _, server in ipairs(servers) do
 	vim.lsp.enable(server)
 end
