@@ -9,86 +9,68 @@ vim.opt.list = true
 vim.opt.listchars = { tab = '▸ ', trail = '·', extends = '>', precedes = '<', nbsp = '␣' }
 vim.opt.cursorline = true
 
--- Define a function to ensure packer is installed
-local ensure_packer = function()
-	local fn = vim.fn
-	local install_path = fn.stdpath('data')..'/site/pack/packer/start/packer.nvim'
-	if fn.empty(fn.glob(install_path)) > 0 then
-		print("Packer not found. Installing...")
-		fn.system({
-			'git',
-			'clone',
-			'--depth', '1',
-			'https://github.com/wbthomason/packer.nvim',
-			install_path
-	})
-		vim.cmd [[packadd packer.nvim]]
-		print("Packer installed. Restart Neovim to load it.")
-		return true
+-- Bootstrap lazy.nvim
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not (vim.uv or vim.loop).fs_stat(lazypath) then
+	local lazyrepo = "https://github.com/folke/lazy.nvim.git"
+	local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
+	if vim.v.shell_error ~= 0 then
+		vim.api.nvim_echo({
+			{ "Failed to clone lazy.nvim:\n", "ErrorMsg" },
+			{ out, "WarningMsg" },
+			{ "\nPress any key to exit..." },
+		}, true, {})
+		vim.fn.getchar()
+		os.exit(1)
 	end
-	return false
 end
+vim.opt.rtp:prepend(lazypath)
 
--- Automatically install packer if not already installed
-local packer_bootstrap = ensure_packer()
-
--- Use a protected call to ensure packer is loaded
-local ok, packer = pcall(require, 'packer')
-if not ok then
-    vim.notify("Packer is not available. Please check the installation.", vim.log.levels.ERROR)
-    return
-end
-
--- Configure packer
-packer.startup(function(use)
-	-- Packer manages itself
-	use 'wbthomason/packer.nvim'
-
+-- Configure plugins
+require("lazy").setup({
 	-- Dependencies
-	use "nvim-lua/plenary.nvim" -- don't forget to add this one if you don't have it yet!
+	"nvim-lua/plenary.nvim",
 
-	-- Telescope and its dependencies --
-	use {
+	-- Telescope and its dependencies
+	{
 		'nvim-telescope/telescope.nvim',
-		tag = '0.1.3', -- Use the latest stable release (or remove this line for the latest commit)
-		requires = { {'nvim-lua/plenary.nvim'} } -- Telescope's dependency
-	}
+		branch = 'master',
+		dependencies = { 'nvim-lua/plenary.nvim' }
+	},
 
-	-- Harpoon2
-	use 'ThePrimeagen/harpoon'
+	-- Harpoon 2
+	{
+		'ThePrimeagen/harpoon',
+		branch = 'harpoon2',
+		dependencies = { 'nvim-lua/plenary.nvim' }
+	},
 
 	-- Git gutter
-	use 'airblade/vim-gitgutter'
+	'airblade/vim-gitgutter',
 
 	-- File manager
-	use 'nvim-tree/nvim-tree.lua'
+	'nvim-tree/nvim-tree.lua',
 
 	-- LSP Config and LSP Installer
-	use 'neovim/nvim-lspconfig' -- Core LSP configurations
-	use 'williamboman/mason.nvim' -- LSP/DAP/formatters installer
-	use 'williamboman/mason-lspconfig.nvim' -- Bridge between mason and lspconfig
+	'neovim/nvim-lspconfig',
+	'williamboman/mason.nvim',
+	'williamboman/mason-lspconfig.nvim',
 
 	-- Completion Framework
-	use 'hrsh7th/nvim-cmp' -- Autocompletion plugin
-	use 'hrsh7th/cmp-nvim-lsp' -- LSP source for nvim-cmp
-	use 'hrsh7th/cmp-buffer' -- Buffer completions
-	use 'hrsh7th/cmp-path' -- Path completions
-	use 'hrsh7th/cmp-cmdline' -- Command line completions
-	use 'L3MON4D3/LuaSnip' -- Snippet engine
-	use 'saadparwaiz1/cmp_luasnip' -- Snippet completions
+	'hrsh7th/nvim-cmp',
+	'hrsh7th/cmp-nvim-lsp',
+	'hrsh7th/cmp-buffer',
+	'hrsh7th/cmp-path',
+	'hrsh7th/cmp-cmdline',
+	'L3MON4D3/LuaSnip',
+	'saadparwaiz1/cmp_luasnip',
 
-	-- Optional: Nice UI for diagnostics, code actions, etc.
-	use 'glepnir/lspsaga.nvim'
+	-- LSP UI
+	'glepnir/lspsaga.nvim',
 
-	-- kanagawa theme
-	use 'gbprod/nord.nvim'
-
-	-- Automatically set up configuration after cloning packer.nvim
-	-- This must be placed at the end of all plugins
-	if packer_bootstrap then
-		require('packer').sync()
-	end
-end)
+	-- Nord theme
+	'gbprod/nord.nvim',
+})
 
 -----------------------------------------------------------------------------------------------------
 
@@ -121,21 +103,21 @@ vim.keymap.set('n', '<leader>fh', builtin.help_tags, { desc = "Help Tags" })
 
 -----------------------------------------------------------------------------------------------------
 
--- Require harpoon --
-local harpoon_mark = require("harpoon.mark")
-local harpoon_ui = require("harpoon.ui")
-local harpoon_term = require("harpoon.term")
+-- Harpoon 2 Setup and configuration --
+local harpoon = require("harpoon")
+harpoon:setup()
 
--- Keymaps for harpoon
-vim.keymap.set('n', '<leader>a', harpoon_mark.add_file, { desc = "Add File to Harpoon" })
-vim.keymap.set('n', '<leader>m', harpoon_ui.toggle_quick_menu, { desc = "Toggle Harpoon Menu" })
-vim.keymap.set('n', '<leader>1', function() harpoon_ui.nav_file(1) end, { desc = "Harpoon File 1" })
-vim.keymap.set('n', '<leader>2', function() harpoon_ui.nav_file(2) end, { desc = "Harpoon File 2" })
-vim.keymap.set('n', '<leader>3', function() harpoon_ui.nav_file(3) end, { desc = "Harpoon File 3" })
-vim.keymap.set('n', '<leader>4', function() harpoon_ui.nav_file(4) end, { desc = "Harpoon File 4" })
-vim.keymap.set('n', '<leader>tt', function() harpoon_term.gotoTerminal(1) end, { desc = "Harpoon Terminal 1" })
-vim.keymap.set('n', '<leader>tn', function() harpoon_term.gotoTerminal(2) end, { desc = "Harpoon Terminal 2" })
+-- Keymaps for harpoon 2
+vim.keymap.set('n', '<leader>a', function() harpoon:list():add() end, { desc = "Add File to Harpoon" })
+vim.keymap.set('n', '<leader>m', function() harpoon.ui:toggle_quick_menu(harpoon:list()) end, { desc = "Toggle Harpoon Menu" })
+vim.keymap.set('n', '<leader>1', function() harpoon:list():select(1) end, { desc = "Harpoon File 1" })
+vim.keymap.set('n', '<leader>2', function() harpoon:list():select(2) end, { desc = "Harpoon File 2" })
+vim.keymap.set('n', '<leader>3', function() harpoon:list():select(3) end, { desc = "Harpoon File 3" })
+vim.keymap.set('n', '<leader>4', function() harpoon:list():select(4) end, { desc = "Harpoon File 4" })
 
+-- Navigate to previous & next buffers in Harpoon list
+vim.keymap.set('n', '<C-S-P>', function() harpoon:list():prev() end, { desc = "Harpoon Previous" })
+vim.keymap.set('n', '<C-S-N>', function() harpoon:list():next() end, { desc = "Harpoon Next" })
 
 -----------------------------------------------------------------------------------------------------
 
@@ -158,7 +140,7 @@ vim.keymap.set('n', '<leader>e', ':NvimTreeToggle<CR>', { desc = "Toggle File Tr
 
 -----------------------------------------------------------------------------------------------------
 
--- LSP Setup and configuration --
+-- LSP Setup and configuration (Neovim 0.11+ native API) --
 require("mason").setup()
 require("mason-lspconfig").setup({
 	ensure_installed = {
@@ -173,25 +155,27 @@ require("mason-lspconfig").setup({
 	},
 })
 
-local lspconfig = require("lspconfig")
+-- Get capabilities from nvim-cmp for LSP completion
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
--- Lua server with custom settings
-lspconfig.lua_ls.setup {
+-- Set global config for all LSP servers
+vim.lsp.config('*', {
 	capabilities = capabilities,
+})
+
+-- Configure lua_ls with custom settings to recognize vim global
+vim.lsp.config.lua_ls = {
 	settings = {
 		Lua = {
-			diagnostics = { globals = { "vim" } }, -- Recognize 'vim' as a global
+			diagnostics = { globals = { "vim" } },
 		},
 	},
 }
 
--- Automatically set up all other installed servers
-local servers = { "pyright", "zls", "clangd", "rust_analyzer", "gopls", "bashls", "elixirls" }
+-- Enable all LSP servers
+local servers = { "lua_ls", "pyright", "zls", "clangd", "rust_analyzer", "gopls", "bashls", "elixirls" }
 for _, server in ipairs(servers) do
-	lspconfig[server].setup {
-		capabilities = capabilities,
-	}
+	vim.lsp.enable(server)
 end
 
 local cmp = require'cmp'
