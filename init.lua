@@ -9,6 +9,9 @@ vim.opt.list = true
 vim.opt.listchars = { tab = '▸ ', trail = '·', extends = '>', precedes = '<', nbsp = '␣' }
 vim.opt.cursorline = true
 
+-- Prevent horizontal jittering when scrolling vertically
+vim.opt.signcolumn = "yes"  -- Always show sign column to prevent shifting
+
 -- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
@@ -220,12 +223,17 @@ cmp.setup({
 })
 
 -- Improved LSP UI
-require("lspsaga").setup({})
+require("lspsaga").setup({
+	lightbulb = {
+		enable = false,  -- Disable lightbulb to prevent jittering
+	},
+})
 
 -- General LSP Keymaps
 vim.keymap.set('n', 'gd', vim.lsp.buf.definition, { desc = "Go to Definition" })
 vim.keymap.set('n', 'K', vim.lsp.buf.hover, { desc = "Hover Documentation" })
 vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, { desc = "Rename Symbol" })
+vim.keymap.set('n', 'gR', vim.lsp.buf.rename, { desc = "LSP Rename" })
 vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, { desc = "Code Action" })
 vim.keymap.set('n', 'gr', vim.lsp.buf.references, { desc = "References" })
 
@@ -234,5 +242,13 @@ vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = "Previous Diagnosti
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = "Next Diagnostic" })
 vim.keymap.set('n', '<leader>d', vim.diagnostic.open_float, { desc = "Show Diagnostic" })
 
--- Colorshema
+-- General Vim features
+vim.opt.autoread = true
+vim.opt.updatetime = 5000  -- Check for file changes after 5 seconds of inactivity
+vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold", "CursorHoldI" }, {
+	pattern = "*",
+	command = "if mode() != 'c' | checktime | endif",
+})
+
 vim.cmd.colorscheme("nord")
+
