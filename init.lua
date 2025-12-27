@@ -71,8 +71,9 @@ require("lazy").setup({
 	-- LSP UI
 	'glepnir/lspsaga.nvim',
 
-	-- Nord theme
+	-- Themes
 	'gbprod/nord.nvim',
+	{ "ellisonleao/gruvbox.nvim", priority = 1000, config = true },
 })
 
 -----------------------------------------------------------------------------------------------------
@@ -250,5 +251,5 @@ vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold", "CursorHo
 	command = "if mode() != 'c' | checktime | endif",
 })
 
-vim.cmd.colorscheme("nord")
+vim.cmd.colorscheme("gruvbox")
 
