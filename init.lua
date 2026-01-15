@@ -192,8 +192,27 @@ vim.lsp.config.svelte = {
 	},
 }
 
+-- Configure rust-analyzer with inlay hints
+vim.lsp.config.rust_analyzer = {
+	settings = {
+		['rust-analyzer'] = {
+			inlayHints = {
+				typeHints = {
+					enable = true,
+				},
+				parameterHints = {
+					enable = true,
+				},
+				chainingHints = {
+					enable = true,
+				},
+			},
+		},
+	},
+}
+
 -- Enable all LSP servers
-local servers = { "lua_ls", "pyright", "zls", "clangd", "rust_analyzer", "gopls", "bashls", "elixirls", "ts_ls", "svelte" }
+local servers = { "lua_ls", "pyright", "zls", "clangd", "rust_analyzer", "gopls", "bashls", "elixirls", "ts_ls", "svelte", "gleam" }
 for _, server in ipairs(servers) do
 	vim.lsp.enable(server)
 end
@@ -228,6 +247,16 @@ require("lspsaga").setup({
 	lightbulb = {
 		enable = false,  -- Disable lightbulb to prevent jittering
 	},
+})
+
+-- Enable inlay hints automatically when LSP attaches
+vim.api.nvim_create_autocmd("LspAttach", {
+	callback = function(args)
+		local client = vim.lsp.get_client_by_id(args.data.client_id)
+		if client and client.server_capabilities.inlayHintProvider then
+			vim.lsp.inlay_hint.enable(true, { bufnr = args.buf })
+		end
+	end,
 })
 
 -- General LSP Keymaps
