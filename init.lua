@@ -74,7 +74,30 @@ require("lazy").setup({
 	-- Themes
 	'gbprod/nord.nvim',
 	{ "ellisonleao/gruvbox.nvim", priority = 1000, config = true },
+
+	-- Treesitter for syntax highlighting
+	{ 'nvim-treesitter/nvim-treesitter', build = ':TSUpdate' },
 })
+
+-----------------------------------------------------------------------------------------------------
+
+-- Treesitter Setup and configuration --
+local ok, treesitter = pcall(require, 'nvim-treesitter.configs')
+if ok then
+	treesitter.setup({
+		ensure_installed = {
+			"lua", "python", "zig", "c", "cpp", "rust", "go", "bash",
+			"elixir", "typescript", "javascript", "svelte", "gleam",
+			"html", "css", "json", "yaml", "markdown"
+		},
+		sync_install = true,
+		auto_install = true,
+		highlight = {
+			enable = true,
+			additional_vim_regex_highlighting = false,
+		},
+	})
+end
 
 -----------------------------------------------------------------------------------------------------
 
