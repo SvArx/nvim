@@ -72,8 +72,8 @@ require("lazy").setup({
 	'glepnir/lspsaga.nvim',
 
 	-- Themes
-	'gbprod/nord.nvim',
 	{ "ellisonleao/gruvbox.nvim", priority = 1000, config = true },
+	{ "sainnhe/everforest", priority = 1000 },
 
 	-- Treesitter for syntax highlighting
 	{ 'nvim-treesitter/nvim-treesitter', build = ':TSUpdate' },
@@ -303,5 +303,5 @@ vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold", "CursorHo
 	command = "if mode() != 'c' | checktime | endif",
 })
 
-vim.cmd.colorscheme("gruvbox")
+vim.cmd.colorscheme("everforest")
 
