@@ -86,7 +86,7 @@ local ok, treesitter = pcall(require, 'nvim-treesitter.configs')
 if ok then
 	treesitter.setup({
 		ensure_installed = {
-			"lua", "python", "zig", "c", "cpp", "rust", "go", "bash",
+			"lua", "python", "zig", "c", "cpp", "rust", "bash",
 			"elixir", "typescript", "javascript", "svelte", "gleam",
 			"html", "css", "json", "yaml", "markdown"
 		},
@@ -176,7 +176,6 @@ require("mason-lspconfig").setup({
 		"zls",           -- Zig
 		"clangd",        -- C, C++
 		"rust_analyzer", -- Rust
-		"gopls",         -- Go
 		"bashls",        -- Bash
 		"elixirls",      -- Elixir
 		"ts_ls",         -- TypeScript/JavaScript
@@ -235,7 +234,7 @@ vim.lsp.config.rust_analyzer = {
 }
 
 -- Enable all LSP servers
-local servers = { "lua_ls", "pyright", "zls", "clangd", "rust_analyzer", "gopls", "bashls", "elixirls", "ts_ls", "svelte", "gleam" }
+local servers = { "lua_ls", "pyright", "zls", "clangd", "rust_analyzer", "bashls", "elixirls", "ts_ls", "svelte", "gleam" }
 for _, server in ipairs(servers) do
 	vim.lsp.enable(server)
 end
